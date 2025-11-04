@@ -5,24 +5,40 @@ import com.example.memento.entities.TaskCategory
 import java.util.Date
 
 object MockDataLoader {
-    fun getDemoData(): List<Task> = listOf(
+    val categories = getDemoCategories()
+    fun getDemoData(): MutableList<Task> = mutableListOf(
         Task(
             "Submit seminar",
             Date(),
-            TaskCategory("RAMPU", "#000080"),
+            categories[0],
             false
         ),
         Task(
             "Prepare for exercises",
             Date(),
-            TaskCategory("RPP", "#FF0000"),
+            categories[1],
             false
         ),
         Task(
             "Connect to server (SSH)",
             Date(),
-            TaskCategory("RWA", "#CCCCCC"),
+            categories[2],
             false
         )
     )
+
+    fun getDemoCategories(): List<TaskCategory> = listOf(
+        TaskCategory("RAMPU", "#000080"),
+        TaskCategory("RPP", "#FF0000"),
+        TaskCategory("RWA", "#CCCCCC")
+    )
 }
+
+
+
+
+
+
+
+
+

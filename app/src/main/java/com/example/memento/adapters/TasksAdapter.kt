@@ -12,7 +12,7 @@ import com.example.memento.entities.Task
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TasksAdapter(private val tasksList: List<Task>)
+class TasksAdapter(private val tasksList: MutableList<Task>)
     : RecyclerView.Adapter<TasksAdapter.TaskViewHolder>() {
     inner class TaskViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val sdf: SimpleDateFormat = SimpleDateFormat(
@@ -55,6 +55,17 @@ class TasksAdapter(private val tasksList: List<Task>)
     }
 
     override fun getItemCount(): Int = tasksList.size
+
+    fun addTask(newTask: Task) {
+        var newIndexInList = tasksList.indexOfFirst { task ->
+            task.dueDate > newTask.dueDate
+        }
+        if (newIndexInList == -1) {
+            newIndexInList = tasksList.size
+        }
+        tasksList.add(newIndexInList, newTask)
+        notifyItemInserted(newIndexInList)
+    }
 }
 
 
