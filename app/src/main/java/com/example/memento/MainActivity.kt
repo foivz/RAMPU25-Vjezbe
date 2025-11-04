@@ -36,10 +36,29 @@ class MainActivity : AppCompatActivity() {
 
         viewPager2.adapter = mainPagerAdapter
 
+        viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                navView.menu[position].isChecked = true
+            }
+        })
+
         TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
             tab.setText(mainPagerAdapter.fragmentItems[position].titleRes)
             tab.setIcon(mainPagerAdapter.fragmentItems[position].iconRes)
         }.attach()
+
+        mainPagerAdapter.fragmentItems.withIndex().forEach { (index, fragmentItem) ->
+            navView.menu
+                .add(fragmentItem.titleRes)
+                .setIcon(fragmentItem.iconRes)
+                .setCheckable(true)
+                .setChecked((index == 0))
+                .setOnMenuItemClickListener {
+                    viewPager2.setCurrentItem(index, true)
+                    navDrawerLayout.closeDrawers()
+                    return@setOnMenuItemClickListener true
+                }
+        }
     }
 }
 
