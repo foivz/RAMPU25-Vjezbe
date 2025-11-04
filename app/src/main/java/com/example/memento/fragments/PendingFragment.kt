@@ -10,9 +10,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.memento.MockDataLoader
 import com.example.memento.R
 import com.example.memento.adapters.TasksAdapter
+import com.example.memento.helpers.NewTaskDialogHelper
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class PendingFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
+    private lateinit var fab: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
