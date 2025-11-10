@@ -67,8 +67,3 @@ class TasksAdapter(private val tasksList: MutableList<Task>)
         notifyItemInserted(newIndexInList)
     }
 }
-
-
-
-
-

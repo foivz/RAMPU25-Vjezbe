@@ -43,16 +43,3 @@ class MainPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle)
 
     override fun getItemCount(): Int = fragmentItems.size
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
