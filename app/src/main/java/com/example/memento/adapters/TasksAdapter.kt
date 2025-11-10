@@ -1,5 +1,6 @@
 package com.example.memento.adapters
 
+import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.SurfaceView
 import android.view.View
@@ -8,11 +9,12 @@ import android.widget.TextView
 import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memento.R
+import com.example.memento.database.TasksDatabase
 import com.example.memento.entities.Task
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TasksAdapter(private val tasksList: MutableList<Task>)
+class TasksAdapter(private val tasksList: MutableList<Task>, private val onTaskCompleted: ((taskId: Int) -> Unit)? = null)
     : RecyclerView.Adapter<TasksAdapter.TaskViewHolder>() {
     inner class TaskViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val sdf: SimpleDateFormat = SimpleDateFormat(
@@ -27,6 +29,40 @@ class TasksAdapter(private val tasksList: MutableList<Task>)
             taskName = view.findViewById(R.id.tv_task_name)
             taskDueDate = view.findViewById(R.id.tv_task_due_date)
             taskCategoryColor = view.findViewById(R.id.sv_task_category_color)
+
+            view.setOnLongClickListener {
+                val currentTask = tasksList[bindingAdapterPosition]
+
+                val alertDialogBuilder = AlertDialog.Builder(view.context)
+                    .setTitle(taskName.text)
+                    .setNeutralButton("Delete task") { _, _ ->
+                        val deletedTask = tasksList[bindingAdapterPosition]
+                        TasksDatabase.getInstance().getTasksDao().removeTask(deletedTask)
+                        removeTaskFromList()
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.cancel();
+                    }
+
+                if (onTaskCompleted != null) {
+                    alertDialogBuilder.setPositiveButton("Mark as completed") { _, _ ->
+                        val completedTask = tasksList[bindingAdapterPosition]
+                        completedTask.completed = true
+                        TasksDatabase.getInstance().getTasksDao().insertTask(completedTask)
+                        removeTaskFromList()
+                        onTaskCompleted.invoke(completedTask.id)
+                    }
+                }
+
+                alertDialogBuilder.show()
+
+                return@setOnLongClickListener true
+            }
+        }
+
+        private fun removeTaskFromList() {
+            tasksList.removeAt(bindingAdapterPosition)
+            notifyItemRemoved(bindingAdapterPosition)
         }
 
         fun bind(task: Task) {

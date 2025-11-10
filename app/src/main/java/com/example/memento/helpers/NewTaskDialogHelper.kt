@@ -68,7 +68,7 @@ class NewTaskDialogHelper(private val view: View) {
             override fun onFocusChange(view: View, hasFocus: Boolean) {
                 if (hasFocus) {
                     TimePickerDialog(
-                        view!!.context,
+                        view.context,
                         object : TimePickerDialog.OnTimeSetListener {
                             override fun onTimeSet(
                                 t: TimePicker?,
@@ -97,17 +97,11 @@ class NewTaskDialogHelper(private val view: View) {
         val selectedCategory = spinnerCategory.selectedItem as TaskCategory
 
         return Task(
+            0,
             newTaskName,
             selectedDateTime.time,
-            selectedCategory,
+            selectedCategory.id,
             false
         )
     }
-
-
 }
-
-
-
-
-
